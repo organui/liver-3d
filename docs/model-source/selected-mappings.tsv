@@ -1,0 +1,78 @@
+group	hierarchy	concept id	name	element file id
+liver	isa	FMA13365	caudate lobe of liver	FJ2816
+liver	isa	FMA15739	hepatovenous segment ii	FJ2818
+liver	isa	FMA15741	hepatovenous segment iii	FJ2819
+liver	isa	FMA15742	hepatovenous segment iv	FJ2820
+liver	isa	FMA15743	hepatovenous segment v	FJ2821
+liver	isa	FMA15744	hepatovenous segment vi	FJ2822
+liver	isa	FMA15745	hepatovenous segment vii	FJ2409
+liver	isa	FMA15746	hepatovenous segment viii	FJ2823
+liver	isa	FMA15746	hepatovenous segment viii	FJ2824
+gallbladder	partof	FMA7202	gallbladder	FJ2817
+portal	partof	FMA50735	hepatic portal vein	FJ1853
+portal	partof	FMA50735	hepatic portal vein	FJ1893
+portal	partof	FMA50735	hepatic portal vein	FJ1913
+portal	partof	FMA50735	hepatic portal vein	FJ1914
+portal	partof	FMA50735	hepatic portal vein	FJ2404
+portal	partof	FMA50735	hepatic portal vein	FJ2405
+portal	partof	FMA50735	hepatic portal vein	FJ3073
+portal	partof	FMA50735	hepatic portal vein	FJ3074
+portal	partof	FMA50735	hepatic portal vein	FJ3102
+portal	partof	FMA50735	hepatic portal vein	FJ3111
+portal	partof	FMA50735	hepatic portal vein	FJ3112
+portal	partof	FMA50735	hepatic portal vein	FJ3113
+portal	partof	FMA50735	hepatic portal vein	FJ3122
+portal	partof	FMA50735	hepatic portal vein	FJ3124
+portal	partof	FMA50735	hepatic portal vein	FJ3125
+portal	partof	FMA50735	hepatic portal vein	FJ3126
+portal	partof	FMA50735	hepatic portal vein	FJ3127
+portal	partof	FMA50735	hepatic portal vein	FJ3128
+hepatic-veins	isa	FMA14337	hepatic vein	FJ2414
+hepatic-veins	isa	FMA14337	hepatic vein	FJ2415
+hepatic-veins	isa	FMA14337	hepatic vein	FJ2416
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ1867
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3083
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3084
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3085
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3086
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3097
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3098
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3099
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3100
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3101
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3118
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3119
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3120
+hepatic-veins	isa	FMA17541	tributary of hepatic vein	FJ3121
+artery	partof	FMA14772	hepatic artery proper	FJ1916
+artery	partof	FMA14772	hepatic artery proper	FJ2386
+artery	partof	FMA14772	hepatic artery proper	FJ3075
+artery	partof	FMA14772	hepatic artery proper	FJ3076
+artery	partof	FMA14772	hepatic artery proper	FJ3077
+artery	partof	FMA14772	hepatic artery proper	FJ3081
+artery	partof	FMA14772	hepatic artery proper	FJ3091
+artery	partof	FMA14772	hepatic artery proper	FJ3092
+artery	partof	FMA14772	hepatic artery proper	FJ3093
+artery	partof	FMA14772	hepatic artery proper	FJ3095
+artery	partof	FMA14772	hepatic artery proper	FJ3106
+artery	partof	FMA14772	hepatic artery proper	FJ3107
+artery	partof	FMA14772	hepatic artery proper	FJ3114
+artery	partof	FMA14772	hepatic artery proper	FJ3115
+artery	partof	FMA14772	hepatic artery proper	FJ3116
+artery	partof	FMA14772	hepatic artery proper	FJ3117
+biliary	partof	FMA71891	hepatic biliary tree	FJ1883
+biliary	partof	FMA71891	hepatic biliary tree	FJ3071
+biliary	partof	FMA71891	hepatic biliary tree	FJ3072
+biliary	partof	FMA71891	hepatic biliary tree	FJ3079
+biliary	partof	FMA71891	hepatic biliary tree	FJ3088
+biliary	partof	FMA71891	hepatic biliary tree	FJ3089
+biliary	partof	FMA71891	hepatic biliary tree	FJ3090
+biliary	partof	FMA71891	hepatic biliary tree	FJ3096
+biliary	partof	FMA71891	hepatic biliary tree	FJ3103
+biliary	partof	FMA71891	hepatic biliary tree	FJ3104
+biliary	partof	FMA71891	hepatic biliary tree	FJ3105
+biliary	partof	FMA71891	hepatic biliary tree	FJ3108
+biliary	partof	FMA71891	hepatic biliary tree	FJ3109
+biliary	partof	FMA71891	hepatic biliary tree	FJ3110
+biliary	partof	FMA71891	hepatic biliary tree	FJ3123
+cystic	partof	FMA14539	cystic duct	FJ3080

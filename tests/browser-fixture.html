@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>OrganUI Liver — failure test fixture</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Development-only browser fixture; excluded from the production build.
+      const mode = new URLSearchParams(location.search).get("mode");
+      if (mode === "webgl") {
+        const original = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+          return type.includes("webgl")
+            ? null
+            : original.call(this, type, ...args);
+        };
+      }
+      if (mode === "model") {
+        const original = window.fetch;
+        let unavailable = true;
+        document.addEventListener(
+          "click",
+          (event) => {
+            if (
+              event.target
+                .closest("button")
+                ?.textContent.includes("Retry 3D viewer")
+            )
+              unavailable = false;
+          },
+          true,
+        );
+        window.fetch = (input, init) =>
+          unavailable && String(input).includes("models/liver.glb")
+            ? Promise.resolve(
+                new Response("Fixture: unavailable model", { status: 503 }),
+              )
+            : original(input, init);
+      }
+      if (mode === "reduced") {
+        const original = window.matchMedia.bind(window);
+        window.matchMedia = (query) =>
+          query === "(prefers-reduced-motion: reduce)"
+            ? {
+                matches: true,
+                media: query,
+                addEventListener() {},
+                removeEventListener() {},
+              }
+            : original(query);
+      }
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
