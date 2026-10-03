@@ -22,7 +22,7 @@
   font-synthesis: none;
   font-weight: 400;
   --ink: #303630;
-  --muted: #73796f;
+  --muted: #61675d;
   --line: #e1e3dc;
   --surface: #f5f5f0;
   --wash: #eceee7;
@@ -70,7 +70,7 @@ input:focus-visible,
 summary:focus-visible,
 .canvas-wrap:focus-visible,
 .anatomy-panel:focus-visible {
-  outline: 2px solid #73796f;
+  outline: 2px solid var(--muted);
   outline-offset: 4px;
 }
 button:not(:disabled),
@@ -207,7 +207,7 @@ button svg {
   overflow: hidden;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 650;
   letter-spacing: 1.3px;
   color: var(--muted);
@@ -239,10 +239,10 @@ button svg {
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.85;
   transition: opacity 0.24s;
 }
 .canvas-hint.is-dismissed,
@@ -256,12 +256,12 @@ button svg {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .scene-status button {
   text-decoration: underline;
-  font-size: 10px;
+  font-size: 11px;
   padding: 4px;
 }
 .pending {
@@ -366,7 +366,7 @@ button svg {
   background: var(--surface);
   border-radius: 999px;
   padding: 4px 7px 4px 10px;
-  font-size: 11px;
+  font-size: 12px;
   max-width: calc(100% - 56px);
 }
 .selection-chip > button {
@@ -375,6 +375,13 @@ button svg {
 }
 .selection-name {
   text-align: left;
+}
+.chip-hidden {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
 }
 .empty-scene,
 .stage-message {
@@ -413,8 +420,10 @@ button svg {
   accent-color: var(--ink);
 }
 .anatomy-panel {
+  --panel-pad-top: 24px;
+  --panel-pad-x: 28px;
   background: var(--surface);
-  padding: 24px 28px;
+  padding: var(--panel-pad-top) var(--panel-pad-x);
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -423,6 +432,13 @@ button svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Stays in place while the panel scrolls, so the close control is reachable. */
+  position: sticky;
+  z-index: 1;
+  top: calc(-1 * var(--panel-pad-top));
+  margin: calc(-1 * var(--panel-pad-top)) calc(-1 * var(--panel-pad-x)) -12px;
+  padding: var(--panel-pad-top) var(--panel-pad-x) 12px;
+  background: var(--surface);
 }
 .panel-heading h2 {
   font-size: 21px;
@@ -430,7 +446,7 @@ button svg {
   letter-spacing: -0.5px;
 }
 .count-tag {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .search-wrap {
@@ -444,7 +460,7 @@ button svg {
   min-height: 44px;
 }
 .search-wrap:focus-within {
-  outline: 2px solid #747970;
+  outline: 2px solid var(--muted);
   outline-offset: 1px;
 }
 .search-wrap input {
@@ -477,11 +493,10 @@ button svg {
   align-items: center;
   justify-content: space-between;
   font-family: "DM Sans Variable", sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.25px;
   color: var(--muted);
-  margin: 0 10px 7px;
+  margin: 0 10px 6px;
 }
 .structure-list ul {
   list-style: none;
@@ -527,7 +542,7 @@ button svg {
 .structure-select small {
   display: inline-block;
   margin-left: 6px;
-  font-size: 8px;
+  font-size: 10px;
   color: var(--muted);
 }
 .structure-list li.selected {
@@ -544,7 +559,7 @@ button svg {
   color: var(--muted);
 }
 .visibility-button {
-  color: #8b9185;
+  color: var(--muted);
   padding: 8px;
   display: grid;
   place-items: center;
@@ -590,7 +605,7 @@ button svg {
 .detail-card .small-note {
   display: block;
   margin-top: 13px;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.7;
   color: var(--muted);
 }
@@ -598,12 +613,12 @@ button svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 8px;
+  font-size: 10px;
   color: var(--muted);
   margin-bottom: 8px;
 }
 .detail-eyebrow .eyebrow {
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 1px;
 }
 .detail-actions {
@@ -613,7 +628,7 @@ button svg {
   margin: 14px 0;
 }
 .button {
-  font-size: 11px;
+  font-size: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -632,18 +647,18 @@ button svg {
   background: #42483f;
 }
 .restore-detail {
-  font-size: 10px;
+  font-size: 11px;
   margin-left: auto;
   text-decoration: underline;
 }
 .model-note {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   line-height: 1.7;
 }
 .model-note summary {
   cursor: pointer;
-  font-size: 9px;
+  font-size: 11px;
   user-select: none;
   padding: 2px 0;
 }
@@ -672,16 +687,16 @@ button svg {
   color: var(--muted);
 }
 .tour-card .eyebrow {
-  font-size: 7px;
+  font-size: 9px;
   letter-spacing: 1.05px;
   color: var(--muted);
 }
 .tour-card h3 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 550;
 }
 .tour-card p {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   margin-top: 5px;
   line-height: 1.8;
@@ -707,7 +722,7 @@ button svg {
   margin-top: 12px;
 }
 .tour-active p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 .tour-top {
@@ -738,13 +753,13 @@ button svg {
   margin-top: 10px;
 }
 .tour-controls .text-button {
-  font-size: 10px;
+  font-size: 11px;
 }
 .review-note {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 8px;
+  font-size: 10px;
   color: var(--muted);
   line-height: 1.7;
 }
@@ -759,7 +774,7 @@ button svg {
   align-items: center;
   justify-content: space-between;
   padding: 10px 28px;
-  font-size: 9px;
+  font-size: 10px;
   color: var(--muted);
   gap: 15px;
   background: var(--surface);
@@ -831,26 +846,20 @@ button svg {
   overflow-y: auto;
   outline-offset: -5px !important;
 }
-.anatomy-panel,
-.structure-list {
+.anatomy-panel {
   scrollbar-width: thin;
   scrollbar-color: #ccd1c5 transparent;
 }
-.panel-heading,
-.search-wrap,
-.detail-card,
-.review-note,
-.tour-card {
+.anatomy-panel > * {
   flex-shrink: 0;
 }
 .structure-list {
-  flex: 1 1 auto;
-  min-height: 130px;
-  overflow-y: auto;
-  padding-right: 3px;
+  gap: 14px;
 }
 .structure-select {
   font-size: 12.5px;
+  min-height: 38px;
+  padding-block: 9px;
 }
 .anatomy-panel .tour-card {
   margin-top: 0;
@@ -873,7 +882,7 @@ button svg {
 .reveal-control small {
   display: block;
   margin-top: 4px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .reveal-control[aria-checked="true"] {
@@ -916,7 +925,8 @@ button svg {
     grid-template-columns: minmax(0, 1fr) 310px;
   }
   .anatomy-panel {
-    padding: 20px;
+    --panel-pad-top: 20px;
+    --panel-pad-x: 20px;
   }
   .camera-toolbar {
     gap: 14px;
@@ -973,19 +983,19 @@ button svg {
     inset: 76px 0;
   }
   .canvas-hint {
-    font-size: 9px;
+    font-size: 10px;
     bottom: 0;
   }
   .scene-status {
     top: 16px;
     left: 20px;
-    font-size: 9px;
+    font-size: 10px;
   }
   .selection-chip {
     top: 44px;
     right: 20px;
     max-width: calc(100% - 40px);
-    font-size: 10px;
+    font-size: 11px;
   }
   .stage-bottom {
     bottom: 20px;
@@ -1009,8 +1019,12 @@ button svg {
     margin-left: 3px;
   }
   .anatomy-panel {
-    padding: 24px 20px;
+    --panel-pad-top: 24px;
+    --panel-pad-x: 20px;
     gap: 26px;
+  }
+  .panel-heading {
+    position: static;
   }
   .panel-heading h2 {
     font-size: 22px;
@@ -1027,8 +1041,6 @@ button svg {
   }
   .structure-list {
     gap: 20px;
-    overflow: visible;
-    flex: none;
   }
   .structure-list h3 {
     font-size: 11px;
@@ -1087,7 +1099,7 @@ button svg {
     font-size: 14px;
   }
   .tour-card .eyebrow {
-    font-size: 8px;
+    font-size: 9px;
   }
   .tour-card p {
     font-size: 11px;
@@ -1101,7 +1113,7 @@ button svg {
     font-size: 12px;
   }
   .review-note {
-    font-size: 9px;
+    font-size: 10px;
   }
   .mobile-return {
     display: flex;
@@ -1112,7 +1124,7 @@ button svg {
     justify-content: center;
     min-height: 48px;
     padding: 12px 20px;
-    font-size: 9px;
+    font-size: 10px;
   }
   .site-footer > span:first-child {
     display: none;
