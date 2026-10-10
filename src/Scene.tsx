@@ -1,3 +1,4 @@
+import { pickVisibleMesh } from "./picking";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
@@ -289,6 +290,7 @@ function Anatomy(props: Props) {
             renderOrder={ghost ? 2 : 0}
             onClick={(e) => {
               if (ghost || e.delta > 5) return;
+              if (pickVisibleMesh(e.intersections) !== e.object) return;
               e.stopPropagation();
               props.onSelect(p.id);
             }}
