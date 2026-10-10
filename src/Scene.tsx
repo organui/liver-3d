@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
-  Box3,
   BufferGeometry,
+  Color,
   Group,
   Mesh,
   PerspectiveCamera,
@@ -13,6 +13,7 @@ import {
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { structures, type StructureId, type ViewName } from "./anatomy";
+import { fitDistance, framingCenter, surfacePoints } from "./framing";
 export type Command = {
   serial: number;
   type: "view" | "zoom" | "rotate";
@@ -33,7 +34,7 @@ type Props = {
   onError: (message: string) => void;
   onOrbit: () => void;
 };
-type Part = { id: StructureId; geometry: BufferGeometry };
+type Part = { id: StructureId; geometry: BufferGeometry; points: Vector3[] };
 const directions: Record<ViewName, [number, number, number]> = {
   Overview: [-0.25, 0.28, 1],
   Anterior: [0, 0, 1],
@@ -41,30 +42,6 @@ const directions: Record<ViewName, [number, number, number]> = {
   Inferior: [0, -1, 0.01],
   Superior: [0, 1, 0.01],
 };
-function fittingDistance(
-  bounds: Box3,
-  direction: Vector3,
-  fov: number,
-  aspect: number,
-) {
-  const center = bounds.getCenter(new Vector3());
-  const vertical = Math.tan((fov * Math.PI) / 360);
-  const horizontal = vertical * aspect;
-  const right = new Vector3(0, 1, 0).cross(direction).normalize();
-  const up = direction.clone().cross(right).normalize();
-  let distance = 0;
-  for (const x of [bounds.min.x, bounds.max.x])
-    for (const y of [bounds.min.y, bounds.max.y])
-      for (const z of [bounds.min.z, bounds.max.z]) {
-        const corner = new Vector3(x, y, z).sub(center);
-        distance = Math.max(
-          distance,
-          Math.abs(corner.dot(right)) / horizontal + corner.dot(direction),
-          Math.abs(corner.dot(up)) / vertical + corner.dot(direction),
-        );
-      }
-  return distance * 1.08;
-}
 function CameraRig({ parts, ...props }: Props & { parts: Part[] }) {
   const { camera, gl, invalidate, size } = useThree(),
     controls = useRef<OrbitControls | null>(null),
@@ -80,13 +57,32 @@ function CameraRig({ parts, ...props }: Props & { parts: Part[] }) {
     c.dampingFactor = 0.12;
     c.minDistance = 0.3;
     c.maxDistance = 24;
-    const change = () => invalidate(),
-      start = () => orbitCallback.current();
+    // Only a real drag rotation leaves the named view; a click that selects a
+    // structure also starts the controls but must not change the view label.
+    let interacting = false;
+    const lastRotation = camera.quaternion.clone();
+    const change = () => {
+      if (
+        interacting &&
+        1 - Math.abs(lastRotation.dot(camera.quaternion)) > 1e-10
+      )
+        orbitCallback.current();
+      lastRotation.copy(camera.quaternion);
+      invalidate();
+    };
+    const start = () => {
+      interacting = true;
+    };
+    const end = () => {
+      interacting = false;
+    };
     c.addEventListener("change", change);
     c.addEventListener("start", start);
+    c.addEventListener("end", end);
     return () => {
       c.removeEventListener("change", change);
       c.removeEventListener("start", start);
+      c.removeEventListener("end", end);
       c.dispose();
       controls.current = null;
     };
@@ -104,31 +100,29 @@ function CameraRig({ parts, ...props }: Props & { parts: Part[] }) {
     const framedStructure = props.isolated ? props.selected : null;
     const framingChanged = framedStructure !== lastFramedStructure.current;
     if (sameCommand && aspect === lastAspect.current && !framingChanged) return;
-    const bounds = new Box3();
-    for (const p of parts)
-      if (!props.isolated || p.id === props.selected) {
-        p.geometry.computeBoundingBox();
-        bounds.union(p.geometry.boundingBox!);
-      }
+    const points = parts
+      .filter((p) => !props.isolated || p.id === props.selected)
+      .flatMap((p) => p.points);
+    const center = framingCenter(points);
     const fov = (camera as PerspectiveCamera).fov;
     // Opening the sidebar changes the viewport. Keep the user's orbit and zoom
     // while compensating for the new aspect ratio instead of replaying a preset.
     if (sameCommand && framingChanged) {
       const direction = camera.position.clone().sub(c.target).normalize();
-      c.target.copy(bounds.getCenter(new Vector3()));
+      c.target.copy(center);
       camera.position
         .copy(c.target)
         .add(
           direction.multiplyScalar(
-            fittingDistance(bounds, direction, fov, aspect),
+            fitDistance(points, center, direction, fov, aspect),
           ),
         );
     } else if (sameCommand && lastAspect.current !== null) {
       const offset = camera.position.clone().sub(c.target);
       const direction = offset.clone().normalize();
       const ratio =
-        fittingDistance(bounds, direction, fov, aspect) /
-        fittingDistance(bounds, direction, fov, lastAspect.current);
+        fitDistance(points, center, direction, fov, aspect) /
+        fitDistance(points, center, direction, fov, lastAspect.current);
       camera.position.copy(c.target).add(offset.multiplyScalar(ratio));
     } else if (command.type === "zoom") {
       camera.position
@@ -144,9 +138,8 @@ function CameraRig({ parts, ...props }: Props & { parts: Part[] }) {
       spherical.makeSafe();
       camera.position.copy(p.setFromSpherical(spherical).add(c.target));
     } else {
-      const center = bounds.getCenter(new Vector3());
       const direction = new Vector3(...directions[command.view]).normalize();
-      const distance = fittingDistance(bounds, direction, fov, aspect);
+      const distance = fitDistance(points, center, direction, fov, aspect);
       c.target.copy(center);
       camera.position.copy(center).add(direction.multiplyScalar(distance));
       camera.up.set(0, 1, 0);
@@ -169,6 +162,17 @@ function CameraRig({ parts, ...props }: Props & { parts: Part[] }) {
   useFrame(() => controls.current?.update());
   return null;
 }
+const stageTone = new Color("#e4e3dc");
+const ghosts = new Map<string, string>();
+function ghostColor(color: string) {
+  let value = ghosts.get(color);
+  if (!value) {
+    value = "#" + new Color(color).lerp(stageTone, 0.5).getHexString();
+    ghosts.set(color, value);
+  }
+  return value;
+}
+
 function Anatomy(props: Props) {
   const [parts, setParts] = useState<Part[]>([]),
     [hover, setHover] = useState<StructureId | null>(null);
@@ -213,7 +217,12 @@ function Anatomy(props: Props) {
           const id =
             o.userData.structureId ?? o.parent?.userData.structureId ?? o.name;
           if (structures.some((s) => s.id === id))
-            meshes.push({ id, geometry: o.geometry });
+            meshes.push({
+              id,
+              geometry: o.geometry,
+              // Parts render their raw geometry, so sample it untransformed.
+              points: surfacePoints(new Mesh(o.geometry)),
+            });
         }
       });
       if (meshes.length !== structures.length)
@@ -269,6 +278,9 @@ function Anatomy(props: Props) {
       {parts.map((p) => {
         const s = structures.find((s) => s.id === p.id)!;
         const ghost = props.reveal && p.id === "liver";
+        // A selection ghosts everything else so it reads from any view.
+        const ghosted =
+          !ghost && props.selected !== null && props.selected !== p.id;
         return (
           <mesh
             key={p.id}
@@ -290,16 +302,16 @@ function Anatomy(props: Props) {
             raycast={ghost ? () => {} : undefined}
           >
             <meshStandardMaterial
-              color={s.color}
+              color={ghosted ? ghostColor(s.color) : s.color}
               roughness={0.48}
               metalness={0.03}
-              transparent={ghost}
-              opacity={ghost ? 0.12 : 1}
-              depthWrite={!ghost}
+              transparent={ghost || ghosted}
+              opacity={ghost ? 0.12 : ghosted ? 0.22 : 1}
+              depthWrite={!ghost && !ghosted}
               side={2}
               emissive={s.color}
               emissiveIntensity={
-                props.selected === p.id ? 0.13 : hover === p.id ? 0.08 : 0
+                props.selected === p.id ? 0.35 : hover === p.id ? 0.08 : 0
               }
             />
           </mesh>
