@@ -75,3 +75,7 @@ Screenshots render BodyParts3D, © The Database Center for Life Science licensed
 Vite warns about the roughly 969 kB minified Three.js engine chunk (257 kB gzip); model loading is separate from the text interface. R3F's use of `THREE.Clock` emits a non-fatal deprecation warning with Three.js 0.186. Fault-injection pages intentionally log request/renderer errors. One in-app test tab crashed during earlier failure testing; subsequent fresh tabs successfully rendered and exercised the final production build.
 
 Not verified: physical touchscreen/pinch gestures, Safari/Firefox, physical iOS/Android devices, low-end GPU performance, a full assistive-technology audit, or expert anatomical accuracy. No clinical validation is claimed. Public hosting and social/video publication were not performed.
+
+## Cross-explorer consistency pass (10 October 2026)
+
+Selection, framing and the anatomy panel now behave the same in all five OrganUI explorers (brain, heart, kidneys, liver, lungs), using the heart explorer as the reference. A selection lifts the chosen structure in its own color and ghosts the rest to 22% opacity, toned toward the canvas. Every named view is framed by `src/framing.ts`, which fits sampled surface points to the view at a shared 80% fill. The panel starts closed, opens from the header Anatomy button with focus moved into it, and Escape closes it and returns focus to that button. Checked in headless Chromium (SwiftShader WebGL) at 1440×900 and 390×844, with typecheck, tests and build passing.
