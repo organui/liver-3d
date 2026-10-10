@@ -56,7 +56,7 @@ To regenerate the bundled model, run `bun run prepare:model`, then `bun run veri
 
 ## Verification
 
-Type checking, production build, runtime model integrity, and visibility-state regression tests pass. A clean copy with no dependencies, raw model cache, or sibling checkouts installed from `bun.lock`, built successfully, and passed model verification. The refreshed layout was inspected at 1440 × 900, 800 × 700, and 390 × 844, including collapsed and expanded anatomy panels. Rendering and interactions were checked in a Chromium browser; see [verification evidence and manual steps](docs/VERIFICATION.md).
+Type checking, production build, runtime model integrity, and visibility-state regression tests pass. A clean copy with no dependencies, raw model cache, or sibling checkouts installed from `bun.lock`, built successfully, and passed model verification. The refreshed layout, including the 2026-10-03 polish pass, was inspected at 1440 × 900, 800 × 700, and 390 × 844, including collapsed and expanded anatomy panels. Rendering and interactions were checked in a Chromium browser; see [verification evidence and manual steps](docs/VERIFICATION.md).
 
 Known engineering limits: Three.js creates a roughly 969 kB minified engine chunk (257 kB gzip), producing Vite's size warning. The scene is loaded separately. React Three Fiber emits a non-fatal `THREE.Clock` deprecation warning against Three.js 0.186. No application errors were observed in the final normal production preview. Physical iOS/Android, Safari/Firefox, assistive-technology audits, and performance on low-end devices have not been tested.
 

@@ -16,7 +16,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   BookOpen,
-  Check,
   ChevronRight,
   CircleHelp,
   Eye,
@@ -103,12 +102,12 @@ export default function App() {
   const [info, setInfo] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [announcement, setAnnouncement] = useState("");
+  const [hintDismissed, setHintDismissed] = useState(false);
   const searchInput = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const anatomyPanel = useRef<HTMLElement>(null);
   const sidebarToggle = useRef<HTMLButtonElement>(null);
-  const structureList = useRef<HTMLDivElement>(null);
-  const selectedRow = useRef<HTMLLIElement>(null);
+  const detailCard = useRef<HTMLElement>(null);
   const focusTarget = useRef<"panel" | "search" | null>(null);
   const reducedMotion = useReducedMotion();
   const current = structures.find((s) => s.id === selected);
@@ -122,17 +121,22 @@ export default function App() {
       .includes(query.toLowerCase().trim()),
   );
 
+  // When the panel scrolls on its own (desktop), keep the selected structure's
+  // details in view. On mobile the page scrolls instead, so leave it alone
+  // rather than pulling the reader away from the model.
   useLayoutEffect(() => {
-    const list = structureList.current,
-      row = selectedRow.current;
-    if (!sidebarOpen || !list || !row || list.scrollHeight <= list.clientHeight)
-      return;
-    const bounds = list.getBoundingClientRect(),
-      item = row.getBoundingClientRect();
-    if (item.top < bounds.top) list.scrollTop += item.top - bounds.top;
-    else if (item.bottom > bounds.bottom)
-      list.scrollTop += item.bottom - bounds.bottom;
-  }, [selected, query, step, sidebarOpen]);
+    const panel = anatomyPanel.current,
+      card = detailCard.current;
+    if (!sidebarOpen || !selected || !panel || !card) return;
+    if (panel.scrollHeight <= panel.clientHeight) return;
+    const bounds = panel.getBoundingClientRect(),
+      item = card.getBoundingClientRect();
+    if (item.bottom > bounds.bottom)
+      panel.scrollTop += Math.min(
+        item.bottom - bounds.bottom + 16,
+        item.top - bounds.top - 16,
+      );
+  }, [selected, step, sidebarOpen]);
 
   useLayoutEffect(() => {
     if (!sidebarOpen || !focusTarget.current) return;
@@ -176,7 +180,10 @@ export default function App() {
     setProgress(100);
     setReady(true);
   }, []);
-  const orbit = useCallback(() => setActiveView("Custom view"), []);
+  const orbit = useCallback(() => {
+    setActiveView("Custom view");
+    setHintDismissed(true);
+  }, []);
   const view = (name: ViewName) => {
     setActiveView(name);
     setCommand((c) => ({ serial: c.serial + 1, type: "view", view: name }));
@@ -399,7 +406,10 @@ export default function App() {
               </div>
             )}
             {ready && hidden.length < allIds.length && (
-              <p className="canvas-hint">
+              <p
+                className={`canvas-hint ${hintDismissed ? "is-dismissed" : ""}`}
+                aria-hidden="true"
+              >
                 Drag to rotate · Scroll or pinch to zoom
               </p>
             )}
@@ -419,19 +429,27 @@ export default function App() {
                 className="color-dot"
                 style={{ background: current.color }}
               />
-              <button className="selection-name" onClick={() => openAnatomy()}>
+              <button
+                className="selection-name"
+                title="Show details"
+                aria-label={`${current.name}: show details`}
+                onClick={() => openAnatomy()}
+              >
                 {current.name}
               </button>
-              {hidden.includes(current.id) ? (
-                <EyeOff size={13} />
-              ) : (
-                <Check size={13} />
+              {hidden.includes(current.id) && (
+                <span className="chip-hidden">
+                  <EyeOff size={13} aria-hidden="true" />
+                  Hidden
+                </span>
               )}
               <button
                 aria-label="Clear selection"
+                title="Clear selection"
                 onClick={() => {
                   setSelected(null);
                   setStep(null);
+                  setAnnouncement("Selection cleared.");
                 }}
               >
                 <X size={14} />
@@ -534,11 +552,7 @@ export default function App() {
               </button>
             )}
           </div>
-          <div
-            className="structure-list"
-            aria-label="Liver structures"
-            ref={structureList}
-          >
+          <div className="structure-list" aria-label="Liver structures">
             {groups.map((group) => {
               const items = filtered.filter((s) => s.category === group);
               if (!items.length) return null;
@@ -549,7 +563,6 @@ export default function App() {
                     {items.map((s) => (
                       <li
                         key={s.id}
-                        ref={selected === s.id ? selectedRow : undefined}
                         className={`${selected === s.id ? "selected" : ""} ${hidden.includes(s.id) ? "is-hidden" : ""}`}
                         style={
                           { "--structure-color": s.color } as CSSProperties
@@ -617,7 +630,11 @@ export default function App() {
               <span />
             </span>
           </button>
-          <section className="detail-card" aria-label="Structure details">
+          <section
+            className="detail-card"
+            aria-label="Structure details"
+            ref={detailCard}
+          >
             {current ? (
               <>
                 <div className="detail-eyebrow">
@@ -654,7 +671,7 @@ export default function App() {
                     )}
                     {hidden.includes(current.id) ? "Show structure" : "Hide"}
                   </button>
-                  {hidden.length > 0 && (
+                  {hidden.length > 0 && !isolated && (
                     <button
                       className="text-button restore-detail"
                       onClick={restore}

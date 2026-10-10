@@ -24,6 +24,19 @@ The refreshed production build was visually checked at 1440 × 900, 800 × 700, 
 
 `bun run build` (including type checking), `bun test`, and formatting checks pass. The clean-install, model-preparation, reduced-motion, and failure-fixture checks below were performed on the initial implementation; they were not repeated for this layout refresh.
 
+## Polish pass — 2026-10-03
+
+Interface refinements, with no changes to the model, anatomy content, or labels:
+
+- The anatomy panel scrolls as one region, so all seven structures are visible instead of being clipped inside a nested list (previously four of seven were hidden at 1440 × 900). The panel heading stays in place while scrolling on desktop, and selecting a structure scrolls its details into view there. Mobile keeps page scrolling and is not moved when the model is tapped.
+- Minimum interface text raised from 7–9 px to 9–11 px. The muted text color was darkened from about 4.1:1 to about 5.3:1 contrast on the page background, and the visibility icons now use it too.
+- The selection chip shows a labeled "Hidden" state instead of an unexplained check mark; clearing the selection is announced.
+- The detail card no longer shows a duplicate "Restore all" next to "Show all" while a structure is isolated.
+- The drag/zoom hint fades after the first manual orbit.
+- Added a favicon; `theme-color` now matches the page background.
+
+Checked against the production preview in headless Chromium (SwiftShader WebGL) at 1440 × 900, 800 × 700, and 390 × 844: real model rendering, list and scene selection, `/` search, isolation, hiding to the empty-scene state, all four tour steps and Finish (reset to Overview with reveal off), hint dismissal after a drag, and no horizontal overflow on mobile. No page errors; only the known `THREE.Clock` deprecation warning. `bun run build`, `bun test`, and `bun run verify:model` pass. Screenshots were refreshed from this build. The failure fixtures and reduced-motion checks were not repeated, because their code paths did not change.
+
 ## Actual browser checks
 
 Inspected the real GLB in the Codex in-app Chromium browser, at desktop widths (including 1440 px) and 390 × 844 mobile. This used actual rendered geometry and UI interaction, not a screenshot substitute or a mocked canvas.
@@ -62,3 +75,7 @@ Screenshots render BodyParts3D, © The Database Center for Life Science licensed
 Vite warns about the roughly 969 kB minified Three.js engine chunk (257 kB gzip); model loading is separate from the text interface. R3F's use of `THREE.Clock` emits a non-fatal deprecation warning with Three.js 0.186. Fault-injection pages intentionally log request/renderer errors. One in-app test tab crashed during earlier failure testing; subsequent fresh tabs successfully rendered and exercised the final production build.
 
 Not verified: physical touchscreen/pinch gestures, Safari/Firefox, physical iOS/Android devices, low-end GPU performance, a full assistive-technology audit, or expert anatomical accuracy. No clinical validation is claimed. Public hosting and social/video publication were not performed.
+
+## Cross-explorer consistency pass (10 October 2026)
+
+Selection, framing and the anatomy panel now behave the same in all five OrganUI explorers (brain, heart, kidneys, liver, lungs), using the heart explorer as the reference. A selection lifts the chosen structure in its own color and ghosts the rest to 22% opacity, toned toward the canvas. Every named view is framed by `src/framing.ts`, which fits sampled surface points to the view at a shared 80% fill. The panel starts closed, opens from the header Anatomy button with focus moved into it, and Escape closes it and returns focus to that button. Checked in headless Chromium (SwiftShader WebGL) at 1440×900 and 390×844, with typecheck, tests and build passing.
