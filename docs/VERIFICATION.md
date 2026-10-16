@@ -105,7 +105,7 @@ Not verified: screen-reader behaviour of the tree (no assistive-technology testi
 
 ## Registry anatomy tree reinstall (16 October 2026)
 
-`anatomy-tree` was reinstalled from OrganUI PR #12 (`d6b36d0`, served locally; see [registry integration](REGISTRY_INTEGRATION.md)). Leaves now pass their structure colour as `color`, the two groups are `selectable: false`, and the `aria-label` colour CSS was removed. Model, anatomy content, scene code and `src/framing.ts` are unchanged.
+`anatomy-tree` was reinstalled from OrganUI PR #12 (`b8e6451`, served locally; see [registry integration](REGISTRY_INTEGRATION.md)). Leaves now pass their structure colour as `color`, the two groups are `selectable: false`, and the `aria-label` colour CSS was removed. Model, anatomy content, scene code and `src/framing.ts` are unchanged.
 
 Commands, all passing: clean `bun install --frozen-lockfile`, `bun run typecheck`, `bun test` (10 tests across 3 files), `bun run build`, `bun run format:check`, `bun run verify:model`.
 

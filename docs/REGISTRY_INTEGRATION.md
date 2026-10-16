@@ -4,25 +4,25 @@ The Anatomy panel's structure list is the OrganUI registry component `anatomy-tr
 
 ## Exact installation
 
-First installed on 2026-10-16 from the registry artifact built from OrganUI `master` at commit `5e20c41`. Reinstalled (overwriting) the same day from the artifact built from OrganUI PR #12 at branch commit `d6b36d0`, which adds the `color` and `selectable` node options and built-in reveal of an outside selection:
+First installed on 2026-10-16 from the registry artifact built from OrganUI `master` at commit `5e20c41`. Reinstalled (overwriting) the same day from the artifact built from OrganUI PR #12 at branch commit `b8e6451`, which adds the `color` and `selectable` node options and built-in reveal of an outside selection:
 
 ```sh
-REGISTRY_URL=http://127.0.0.1:4411 bunx shadcn@4.21.0 add http://127.0.0.1:4411/anatomy-tree.json -y -o
+REGISTRY_URL=http://127.0.0.1:4412 bunx shadcn@4.21.0 add http://127.0.0.1:4412/anatomy-tree.json -y -o
 ```
 
-The URL is a local static server (`python3 -m http.server 4411 --bind 127.0.0.1`) serving that build output plus shadcn's `colors/neutral.json`, fetched from the shadcn GitHub repository. PR #12 was not merged at install time, so the published registry did not yet carry this version. **After #12 merges, re-verify against `https://organui.com/r/anatomy-tree.json`**: its embedded source should match the checksum below, and a reinstall with the command below should leave `src/components/ui/anatomy-tree.tsx` unchanged. `organui.com` and `ui.shadcn.com` were blocked by the network policy of the sandbox the install ran in, so the published URL (`https://organui.com/r/anatomy-tree.json`) could not be used directly. `REGISTRY_URL` points the CLI's own registry lookups (base colors) at the same server. With network access, the equivalent command is:
+The URL is a local static server (`python3 -m http.server 4412 --bind 127.0.0.1`) serving that build output plus shadcn's `colors/neutral.json`, fetched from the shadcn GitHub repository. PR #12 was not merged at install time, so the published registry did not yet carry this version. **After #12 merges, re-verify against `https://organui.com/r/anatomy-tree.json`**: its embedded source should match the checksum below, and a reinstall with the command below should leave `src/components/ui/anatomy-tree.tsx` unchanged. `organui.com` and `ui.shadcn.com` were blocked by the network policy of the sandbox the install ran in, so the published URL (`https://organui.com/r/anatomy-tree.json`) could not be used directly. `REGISTRY_URL` points the CLI's own registry lookups (base colors) at the same server. With network access, the equivalent command is:
 
 ```sh
 bunx shadcn@4.21.0 add https://organui.com/r/anatomy-tree.json -y -o
 ```
 
-Provenance of the current install (PR #12, `d6b36d0`):
+Provenance of the current install (PR #12, `b8e6451`):
 
 | Artifact                                     | SHA-256                                                            |
 | -------------------------------------------- | ------------------------------------------------------------------ |
-| Served `anatomy-tree.json`                   | `32fbc477ece5f02ac135dbf0a5b4c059c37fc2ca9abc8982641b55c080cc9b30` |
-| Embedded source (`files[0].content`, UTF-8)  | `cb0ebd637b64a9813ba1139560315024b315580ad04e5df6eca3b3d1bb4844c0` |
-| Tracked `src/components/ui/anatomy-tree.tsx` | `dc14798adfbdcaef505cbe05e2ca92a6a3aae6164465d06e8d4d99cd415efab2` |
+| Served `anatomy-tree.json`                   | `719c1547afb1453e809ee1b2fca0dc99858083aa3ff712477a493c77e8f5f389` |
+| Embedded source (`files[0].content`, UTF-8)  | `14709d69270066ebb4677e736d71fa59c2ec9cf9c1f0e1a6a8236795633944cd` |
+| Tracked `src/components/ui/anatomy-tree.tsx` | `3d5554cdc179f1ad778fd6321cc1414c293c4cca0535efd9aab679c686893538` |
 
 The item declares `@base-ui/react@^1.8.0`; this repository pins `@base-ui/react` 1.8.0 (on both installs the CLI wrote `^1.8.0`, which was changed back to the exact pin and re-locked with `bun install`; the lockfile did not change). Tailwind CSS and `@tailwindcss/vite` are 4.1.18, matching kidneys. `bun.lock` stays in Bun's text format.
 
