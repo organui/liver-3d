@@ -67,8 +67,9 @@ The fixtures are in `tests/browser-fixture.html`, served only by Vite developmen
 ## Evidence and limits
 
 - [Desktop screenshot](screenshots/desktop.png): refreshed production app, initial Overview with Anatomy collapsed.
-- [Interior screenshot](screenshots/interior.png): final production app, selected portal vein and translucent liver surface.
+- [Interior screenshot](screenshots/interior.png): selected portal vein and translucent liver surface, with the registry anatomy tree open (refreshed 16 October 2026).
 - [Mobile screenshot](screenshots/mobile.png): final production app at 390 px.
+- [Mobile anatomy screenshot](screenshots/mobile-anatomy.png): registry anatomy tree at 390 px (added 16 October 2026).
 
 Screenshots render BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International; see [model provenance](MODEL_PROVENANCE.md).
 
@@ -79,3 +80,25 @@ Not verified: physical touchscreen/pinch gestures, Safari/Firefox, physical iOS/
 ## Cross-explorer consistency pass (10 October 2026)
 
 Selection, framing and the anatomy panel now behave the same in all five OrganUI explorers (brain, heart, kidneys, liver, lungs), using the heart explorer as the reference. A selection lifts the chosen structure in its own color and ghosts the rest to 22% opacity, toned toward the canvas. Every named view is framed by `src/framing.ts`, which fits sampled surface points to the view at a shared 80% fill. The panel starts closed, opens from the header Anatomy button with focus moved into it, and Escape closes it and returns focus to that button. Checked in headless Chromium (SwiftShader WebGL) at 1440×900 and 390×844, with typecheck, tests and build passing.
+
+## Registry anatomy tree (16 October 2026)
+
+The hand-built anatomy list and its search box were replaced by the OrganUI registry `anatomy-tree` component; see [registry integration](REGISTRY_INTEGRATION.md) for the install command, checksums and decisions. The model, anatomy content, labels, `src/framing.ts` and the scene code are unchanged.
+
+Commands, all passing: `bun install --frozen-lockfile` from a clean copy (no `node_modules` or `dist`), `bun run typecheck`, `bun test` (9 tests across 3 files, including the new `src/anatomy-adapter.test.ts`), `bun run build`, and `bun run format:check` (new script; the installed registry file is excluded through `.prettierignore`).
+
+Checked against the production preview in headless Chromium (Playwright, SwiftShader WebGL) at 1440 × 900 and 390 × 844, with a scripted run that asserts each step:
+
+- Panel closed on arrival. A 3D click selects the liver surface, shows the selection chip, and leaves the view label on Overview; the chip name opens the panel with focus inside it, and the tree marks the same row selected. Escape closes the panel and returns focus to the header Anatomy button.
+- Tree search for `portal` shows only Blood vessels and Portal vein. Selecting Portal vein in the tree updates the chip, details card, and 3D highlight (screenshot below), and the view label stays Overview. Clicking a group name leaves the selection unchanged.
+- Hiding Hepatic artery sets Blood vessels to Mixed and the status to 6 of 7. Hiding the Biliary system group hides its three leaves (3 of 7); toggling the mixed Blood vessels group shows all its leaves (4 of 7). Restore all returns every row to Visible (7 of 7).
+- With the liver surface hidden, clicks where it was rendered do not select it (desktop).
+- After collapsing a group, searching, and selecting, Reset clears the search, re-expands both groups (9 rows), and clears the selection and chip.
+- `/` opens the panel and focuses the tree search; Tab, arrow keys and Enter select a row from the keyboard.
+- No horizontal overflow at 390 px and no console errors at either size.
+
+Before/after builds were compared by recording the bounding box of every element outside the list: identical with the panel closed and only vertical offsets below the (taller) list with it open, so Tailwind's preflight does not change the existing layout.
+
+Screenshots refreshed from this build: [desktop](screenshots/desktop.png), [interior](screenshots/interior.png) (Portal vein selected from the tree, panel open), [mobile](screenshots/mobile.png), and new [mobile anatomy](screenshots/mobile-anatomy.png) (tree at 390 px).
+
+Not verified: screen-reader behaviour of the tree (no assistive-technology testing was done), Safari/Firefox, physical touch devices. The failure fixtures and reduced-motion checks were not repeated; those code paths did not change.
