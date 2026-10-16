@@ -18,18 +18,26 @@ const groups = [
   category: Category;
 }[];
 
-const leaf = ({ id, name }: (typeof structures)[number]): AnatomyNode => ({
+// Each leaf's swatch is the structure's colour, the same one its 3D mesh uses.
+const leaf = ({
+  id,
+  name,
+  color,
+}: (typeof structures)[number]): AnatomyNode => ({
   id,
   label: name,
+  color,
 });
 
 // The single liver surface stays a top-level leaf, so no group row implies
-// that the vessels or bile ducts sit inside it.
+// that the vessels or bile ducts sit inside it. Group rows are not selectable:
+// clicking one (or pressing Enter on it) expands or collapses it.
 export const anatomyTree: readonly AnatomyNode[] = [
   ...structures.filter((s) => s.category === "Organ").map(leaf),
   ...groups.map(({ id, label, category }) => ({
     id,
     label,
+    selectable: false,
     children: structures.filter((s) => s.category === category).map(leaf),
   })),
 ];

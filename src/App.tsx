@@ -48,13 +48,6 @@ import {
 } from "./anatomy-adapter";
 
 const Scene = lazy(() => import("./Scene"));
-// Colour keys for the registry tree rows, matched by their accessible name.
-const treeColors = structures
-  .map(
-    (s) =>
-      `.registry-tree [role="treeitem"][aria-label="${s.name}"]{--structure-color:${s.color}}`,
-  )
-  .join("");
 
 class SceneBoundary extends Component<
   { children: ReactNode; onError: (s: string) => void },
@@ -534,13 +527,13 @@ export default function App() {
               <X size={18} />
             </button>
           </div>
-          <style>{treeColors}</style>
           <AnatomyTree
             key={treeVersion}
             data={anatomyTree}
             selectedId={selected}
             onSelectionChange={(id) => {
-              // Group rows are interface groupings; selection stays on leaves.
+              // Group rows are not selectable (they expand instead); the
+              // guard only keeps the app's selection typed to leaves.
               if (isStructureId(id)) select(id);
             }}
             visibility={visibilityFromHidden(hidden)}

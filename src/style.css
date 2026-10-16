@@ -569,15 +569,10 @@
 .registry-tree [role="treeitem"] > button:nth-child(2):hover {
   background: transparent;
 }
-.registry-tree
-  [role="treeitem"]:not([aria-expanded])
-  > button:nth-child(2)::before {
-  content: "";
+/* The component's colour swatch, sized like the selection chip's dot. */
+.registry-tree [role="treeitem"] > button:nth-child(2) > span[aria-hidden] {
   width: 6px;
   height: 6px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--structure-color, var(--muted-ink));
 }
 .registry-tree [role="treeitem"][aria-expanded] > button:nth-child(2) {
   color: var(--muted-ink);
@@ -589,8 +584,9 @@
 }
 .registry-tree
   [role="treeitem"][aria-checked="false"]
-  > button:nth-child(2)::before {
-  background: #b3b7af;
+  > button:nth-child(2)
+  > span[aria-hidden] {
+  opacity: 0.35;
 }
 .registry-tree [role="treeitem"] > button:last-child {
   min-width: 58px;

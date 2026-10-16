@@ -90,7 +90,7 @@ Commands, all passing: `bun install --frozen-lockfile` from a clean copy (no `no
 Checked against the production preview in headless Chromium (Playwright, SwiftShader WebGL) at 1440 × 900 and 390 × 844, with a scripted run that asserts each step:
 
 - Panel closed on arrival. A 3D click selects the liver surface, shows the selection chip, and leaves the view label on Overview; the chip name opens the panel with focus inside it, and the tree marks the same row selected. Escape closes the panel and returns focus to the header Anatomy button.
-- Tree search for `portal` shows only Blood vessels and Portal vein. Selecting Portal vein in the tree updates the chip, details card, and 3D highlight (screenshot below), and the view label stays Overview. Clicking a group name leaves the selection unchanged.
+- Tree search for `portal` shows only Blood vessels and Portal vein. Selecting Portal vein in the tree updates the chip, details card, and 3D highlight (screenshot below), and the view label stays Overview. Clicking a group name left the selection unchanged (it now expands/collapses the group; see the reinstall below).
 - Hiding Hepatic artery sets Blood vessels to Mixed and the status to 6 of 7. Hiding the Biliary system group hides its three leaves (3 of 7); toggling the mixed Blood vessels group shows all its leaves (4 of 7). Restore all returns every row to Visible (7 of 7).
 - With the liver surface hidden, clicks where it was rendered do not select it (desktop).
 - After collapsing a group, searching, and selecting, Reset clears the search, re-expands both groups (9 rows), and clears the selection and chip.
@@ -102,3 +102,20 @@ Before/after builds were compared by recording the bounding box of every element
 Screenshots refreshed from this build: [desktop](screenshots/desktop.png), [interior](screenshots/interior.png) (Portal vein selected from the tree, panel open), [mobile](screenshots/mobile.png), and new [mobile anatomy](screenshots/mobile-anatomy.png) (tree at 390 px).
 
 Not verified: screen-reader behaviour of the tree (no assistive-technology testing was done), Safari/Firefox, physical touch devices. The failure fixtures and reduced-motion checks were not repeated; those code paths did not change.
+
+## Registry anatomy tree reinstall (16 October 2026)
+
+`anatomy-tree` was reinstalled from OrganUI PR #12 (`d6b36d0`, served locally; see [registry integration](REGISTRY_INTEGRATION.md)). Leaves now pass their structure colour as `color`, the two groups are `selectable: false`, and the `aria-label` colour CSS was removed. Model, anatomy content, scene code and `src/framing.ts` are unchanged.
+
+Commands, all passing: clean `bun install --frozen-lockfile`, `bun run typecheck`, `bun test` (10 tests across 3 files), `bun run build`, `bun run format:check`, `bun run verify:model`.
+
+Checked against the production preview in headless Chromium (Playwright, SwiftShader WebGL) at 1440 × 900 and 390 × 844 with a scripted run:
+
+- Panel closed on arrival; opening it moves focus into the panel. Every leaf shows a 6 px swatch whose computed colour equals its structure (mesh) colour; group rows have no swatch and no `aria-selected`.
+- With Portal vein selected, clicking the Blood vessels name collapses the group and pressing Enter on it expands it again; the selection stays on Portal vein and the view label stays Overview.
+- With Blood vessels collapsed and Reveal interior on, a 3D click on a vessel (Hepatic veins) expanded the group, marked the row selected and left it in view, without a view-label change.
+- Search `cystic` shows Biliary system and Cystic duct; selecting it updates the chip. Hiding Hepatic artery sets Blood vessels to Mixed (its swatch fades); the group toggle shows all its leaves; hiding Biliary system hides its leaves.
+- Reset clears the search, re-expands both groups (9 rows) and clears the selection. Escape closes the panel and returns focus to the header Anatomy button.
+- No horizontal overflow at 390 px and no console errors at either size.
+
+Screenshots refreshed: [interior](screenshots/interior.png) and [mobile anatomy](screenshots/mobile-anatomy.png). Screen-reader testing was again not done.

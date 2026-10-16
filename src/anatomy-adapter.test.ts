@@ -3,12 +3,14 @@ import {
   allStructureIds,
   anatomyTree,
   assertAnatomyMapping,
+  groupIds,
   hiddenFromVisibility,
   isStructureId,
   normalizeVisibility,
   sceneIdsForNode,
   visibilityFromHidden,
 } from "./anatomy-adapter";
+import { structures } from "./anatomy";
 
 test("every scene structure appears exactly once as a tree leaf", () => {
   expect(() => assertAnatomyMapping()).not.toThrow();
@@ -67,4 +69,20 @@ test("tree visibility treats missing leaves as visible and round-trips the hidde
   expect(hiddenFromVisibility(visibilityFromHidden(allStructureIds))).toEqual(
     allStructureIds,
   );
+});
+
+test("leaves carry their mesh colour and group rows are not selectable", () => {
+  const rows = anatomyTree.flatMap((node) => [node, ...(node.children ?? [])]);
+  for (const row of rows) {
+    const structure = structures.find(({ id }) => id === row.id);
+    if (structure) {
+      expect(row.color).toBe(structure.color);
+      expect(row.selectable).toBeUndefined();
+    } else {
+      expect(groupIds).toContain(row.id as (typeof groupIds)[number]);
+      expect(row.selectable).toBe(false);
+      expect(row.color).toBeUndefined();
+    }
+  }
+  expect(rows.filter((row) => row.color)).toHaveLength(structures.length);
 });
