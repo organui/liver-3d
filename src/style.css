@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 @font-face {
   font-family: "Manrope Variable";
   font-style: normal;
@@ -22,85 +24,130 @@
   font-synthesis: none;
   font-weight: 400;
   --ink: #303630;
-  --muted: #61675d;
+  --muted-ink: #61675d;
   --line: #e1e3dc;
   --surface: #f5f5f0;
   --wash: #eceee7;
   --green: #303630;
+  /* shadcn-compatible tokens for registry components, tuned to the palette above. */
+  --background: #f5f5f0;
+  --foreground: #303630;
+  --card: #fbfbf8;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #303630;
+  --primary-foreground: #f5f5f0;
+  --secondary: #eceee7;
+  --secondary-foreground: var(--foreground);
+  --muted: #eceee7;
+  --muted-foreground: #61675d;
+  --accent: #e7ebe1;
+  --accent-foreground: var(--foreground);
+  --destructive: #b4443a;
+  --border: #e1e3dc;
+  --input: var(--border);
+  --ring: #61675d;
+  --radius: 0.65rem;
 }
-* {
-  box-sizing: border-box;
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: calc(var(--radius) * 0.875);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
 }
-[hidden] {
-  display: none !important;
-}
-body {
-  margin: 0;
-}
-button,
-input,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-button,
-input {
-  font: inherit;
-}
-button,
-a {
-  touch-action: manipulation;
-}
-button {
-  cursor: pointer;
-  color: inherit;
-  background: none;
-  border: none;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-}
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
-}
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-summary:focus-visible,
-.canvas-wrap:focus-visible,
-.anatomy-panel:focus-visible {
-  outline: 2px solid var(--muted);
-  outline-offset: 4px;
-}
-button:not(:disabled),
-a,
-input {
-  transition:
-    background 0.16s,
-    color 0.16s,
-    opacity 0.16s;
-}
-button:not(:disabled):hover {
-  background: #e9ebe4;
-}
-button svg,
-a svg {
-  flex-shrink: 0;
-}
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-h1,
-h2,
-h3 {
-  font-family: "Manrope Variable", sans-serif;
-}
-button svg {
-  vertical-align: middle;
+
+/* Base resets stay in the base layer so registry utility classes still win. */
+@layer base {
+  /* Keep the browser line height the app was designed with (preflight uses 1.5). */
+  html {
+    line-height: normal;
+  }
+  * {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+  [hidden] {
+    display: none !important;
+  }
+  body {
+    margin: 0;
+  }
+  button,
+  input,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button,
+  input {
+    font: inherit;
+  }
+  button,
+  a {
+    touch-action: manipulation;
+  }
+  button {
+    cursor: pointer;
+    color: inherit;
+    background: none;
+    border: none;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  summary:focus-visible,
+  .canvas-wrap:focus-visible,
+  .anatomy-panel:focus-visible {
+    outline: 2px solid var(--muted-ink);
+    outline-offset: 4px;
+  }
+  button:not(:disabled),
+  a,
+  input {
+    transition:
+      background 0.16s,
+      color 0.16s,
+      opacity 0.16s;
+  }
+  button:not(:disabled):hover {
+    background: #e9ebe4;
+  }
+  button svg,
+  a svg {
+    flex-shrink: 0;
+  }
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: "Manrope Variable", sans-serif;
+  }
+  button svg {
+    vertical-align: middle;
+  }
 }
 .sr-only {
   position: absolute !important;
@@ -177,7 +224,7 @@ button svg {
   font-weight: 500;
 }
 .about-button {
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .sidebar-toggle {
   display: inline-flex;
@@ -210,7 +257,7 @@ button svg {
   font-size: 10px;
   font-weight: 650;
   letter-spacing: 1.3px;
-  color: var(--muted);
+  color: var(--muted-ink);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -240,7 +287,7 @@ button svg {
   transform: translateX(-50%);
   white-space: nowrap;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-ink);
   pointer-events: none;
   opacity: 0.85;
   transition: opacity 0.24s;
@@ -257,7 +304,7 @@ button svg {
   align-items: center;
   gap: 7px;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .scene-status button {
   text-decoration: underline;
@@ -300,7 +347,7 @@ button svg {
   white-space: nowrap;
 }
 .view-trigger svg {
-  color: var(--muted);
+  color: var(--muted-ink);
   transition: transform 0.16s;
 }
 .view-trigger[aria-expanded="true"] svg {
@@ -330,7 +377,7 @@ button svg {
   border-radius: 10px;
   font-size: 12px;
   text-align: left;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .view-menu button[aria-checked="true"] {
   color: var(--ink);
@@ -344,7 +391,7 @@ button svg {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .icon-button {
   width: 38px;
@@ -381,7 +428,7 @@ button svg {
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .empty-scene,
 .stage-message {
@@ -406,7 +453,7 @@ button svg {
 .stage-message {
   font-size: 12px;
   line-height: 1.8;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .stage-message h2 {
   font-size: 21px;
@@ -447,86 +494,7 @@ button svg {
 }
 .count-tag {
   font-size: 11px;
-  color: var(--muted);
-}
-.search-wrap {
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  background: var(--wash);
-  color: var(--muted);
-  padding: 0 14px;
-  gap: 10px;
-  min-height: 44px;
-}
-.search-wrap:focus-within {
-  outline: 2px solid var(--muted);
-  outline-offset: 1px;
-}
-.search-wrap input {
-  background: none;
-  outline: none !important;
-  border: 0;
-  width: 100%;
-  min-width: 0;
-  font-size: 12px;
-  color: var(--ink);
-  padding: 11px 0;
-}
-.search-wrap input::placeholder {
-  color: var(--muted);
-}
-.search-wrap button {
-  padding: 4px;
-  border-radius: 3px;
-}
-.search-wrap input::-webkit-search-cancel-button {
-  display: none;
-}
-.structure-list {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-.structure-list h3 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: "DM Sans Variable", sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
-  margin: 0 10px 6px;
-}
-.structure-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.structure-list li {
-  display: flex;
-  align-items: center;
-  border-radius: 10px;
-  transition: background 0.16s;
-}
-.structure-list li:hover,
-.structure-list li:focus-within {
-  background: var(--wash);
-}
-.structure-select:not(:disabled):hover {
-  background: transparent;
-}
-.structure-select {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  text-align: left;
-  flex: 1;
-  min-width: 0;
-  font-size: 11px;
-  border-radius: 10px;
-  min-height: 40px;
+  color: var(--muted-ink);
 }
 .color-dot {
   width: 6px;
@@ -536,56 +504,103 @@ button svg {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.structure-select > span:nth-child(2) {
-  flex: 1;
+.registry-tree {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin-inline: -2px;
 }
-.structure-select small {
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 10px;
-  color: var(--muted);
+.registry-tree label {
+  margin: 0 2px 8px;
+  color: var(--muted-ink);
+  font-size: 11px;
+  font-weight: 500;
 }
-.structure-list li.selected {
-  background: #e7ebe1;
+.registry-tree input {
+  min-height: 44px;
+  margin-bottom: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--wash);
+  padding-inline: 14px;
   color: var(--ink);
+  font-size: 12px;
 }
-.structure-list li.selected .structure-select {
-  font-weight: 600;
+.registry-tree input:focus-visible {
+  outline-offset: 1px;
 }
-.structure-list li.is-hidden .color-dot {
-  background: #b3b7af;
+.registry-tree [role="tree"] {
+  display: flex;
+  flex-direction: column;
 }
-.structure-list li.is-hidden .structure-select {
-  color: var(--muted);
+.registry-tree input + p {
+  margin: 0 2px 10px;
+  color: var(--muted-ink);
+  font-size: 10px;
+  line-height: 1.6;
 }
-.visibility-button {
-  color: var(--muted);
-  padding: 8px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  min-width: 32px;
-  min-height: 32px;
+.registry-tree [role="treeitem"] {
+  min-height: 38px;
+  margin-block: 1px;
+  border-radius: 10px;
+  font-size: 12.5px;
 }
-.visibility-button[aria-pressed="false"] {
-  color: var(--muted);
+.registry-tree [role="treeitem"][aria-expanded] {
+  margin-top: 10px;
 }
-.no-results {
-  padding: 26px 12px;
+.registry-tree [role="treeitem"]:first-child {
+  margin-top: 0;
+}
+.registry-tree [role="treeitem"] > button:first-child {
+  color: var(--muted-ink);
+}
+/* Narrower leaf spacer: top-level and nested dots line up with group labels. */
+.registry-tree [role="treeitem"] > span:first-child {
+  width: 0.75rem;
+}
+.registry-tree [role="treeitem"] > button:nth-child(2) {
   display: flex;
   align-items: center;
-  flex-direction: column;
   gap: 10px;
-  color: var(--muted);
+  min-height: 38px;
+  padding-block: 9px;
+}
+.registry-tree [role="treeitem"] > button:nth-child(2):hover {
+  background: transparent;
+}
+/* The component's colour swatch, sized like the selection chip's dot. */
+.registry-tree [role="treeitem"] > button:nth-child(2) > span[aria-hidden] {
+  width: 6px;
+  height: 6px;
+}
+.registry-tree [role="treeitem"][aria-expanded] > button:nth-child(2) {
+  color: var(--muted-ink);
+  font-size: 11px;
+  font-weight: 500;
+}
+.registry-tree [role="treeitem"][aria-checked="false"] > button:nth-child(2) {
+  color: var(--muted-ink);
+}
+.registry-tree
+  [role="treeitem"][aria-checked="false"]
+  > button:nth-child(2)
+  > span[aria-hidden] {
+  opacity: 0.35;
+}
+.registry-tree [role="treeitem"] > button:last-child {
+  min-width: 58px;
+  border-color: var(--line);
+  border-radius: 99px;
+  color: var(--muted-ink);
+  font-size: 10px;
   text-align: center;
 }
-.no-results h3 {
-  font-size: 14px;
-  letter-spacing: 0;
+.registry-tree [role="treeitem"][aria-checked="false"] > button:last-child {
+  border-style: dashed;
 }
-.no-results p {
+.registry-tree [role="tree"] ~ p {
   font-size: 11px;
-  line-height: 1.7;
 }
 .detail-card {
   padding: 10px 2px 0;
@@ -600,21 +615,21 @@ button svg {
 .detail-card > p {
   font-size: 12px;
   line-height: 1.8;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .detail-card .small-note {
   display: block;
   margin-top: 13px;
   font-size: 11px;
   line-height: 1.7;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .detail-eyebrow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 10px;
-  color: var(--muted);
+  color: var(--muted-ink);
   margin-bottom: 8px;
 }
 .detail-eyebrow .eyebrow {
@@ -653,7 +668,7 @@ button svg {
 }
 .model-note {
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-ink);
   line-height: 1.7;
 }
 .model-note summary {
@@ -684,12 +699,12 @@ button svg {
   height: 36px;
   display: grid;
   place-items: center;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .tour-card .eyebrow {
   font-size: 9px;
   letter-spacing: 1.05px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .tour-card h3 {
   font-size: 13px;
@@ -697,7 +712,7 @@ button svg {
 }
 .tour-card p {
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-ink);
   margin-top: 5px;
   line-height: 1.8;
 }
@@ -723,7 +738,7 @@ button svg {
 }
 .tour-active p {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .tour-top {
   display: flex;
@@ -760,7 +775,7 @@ button svg {
   align-items: center;
   gap: 6px;
   font-size: 10px;
-  color: var(--muted);
+  color: var(--muted-ink);
   line-height: 1.7;
 }
 .review-note .status-dot {
@@ -775,7 +790,7 @@ button svg {
   justify-content: space-between;
   padding: 10px 28px;
   font-size: 10px;
-  color: var(--muted);
+  color: var(--muted-ink);
   gap: 15px;
   background: var(--surface);
 }
@@ -822,7 +837,7 @@ button svg {
 .about-dialog p {
   font-size: 12px;
   line-height: 1.9;
-  color: var(--muted);
+  color: var(--muted-ink);
   margin-bottom: 12px;
 }
 .about-dialog p a {
@@ -853,14 +868,6 @@ button svg {
 .anatomy-panel > * {
   flex-shrink: 0;
 }
-.structure-list {
-  gap: 14px;
-}
-.structure-select {
-  font-size: 12.5px;
-  min-height: 38px;
-  padding-block: 9px;
-}
 .anatomy-panel .tour-card {
   margin-top: 0;
 }
@@ -874,7 +881,7 @@ button svg {
   border-radius: 8px;
   text-align: left;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .reveal-control > span:first-of-type {
   flex: 1;
@@ -883,7 +890,7 @@ button svg {
   display: block;
   margin-top: 4px;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-ink);
 }
 .reveal-control[aria-checked="true"] {
   color: var(--ink);
@@ -1033,27 +1040,20 @@ button svg {
     width: 40px;
     height: 40px;
   }
-  .search-wrap {
-    min-height: 44px;
-  }
-  .search-wrap input {
+  .registry-tree input {
     font-size: 13px;
   }
-  .structure-list {
-    gap: 20px;
+  .registry-tree [role="treeitem"],
+  .registry-tree [role="treeitem"] > button:nth-child(2) {
+    min-height: 44px;
+    font-size: 13px;
   }
-  .structure-list h3 {
+  .registry-tree [role="treeitem"][aria-expanded] > button:nth-child(2) {
     font-size: 11px;
-    margin-bottom: 8px;
   }
-  .structure-select {
-    font-size: 13px;
-    min-height: 44px;
-    padding: 12px;
-  }
-  .visibility-button {
-    min-width: 44px;
-    min-height: 44px;
+  .registry-tree [role="treeitem"] > button:last-child {
+    min-width: 64px;
+    min-height: 32px;
   }
   .detail-card {
     padding-top: 10px;
